@@ -1,10 +1,11 @@
-export default function showModalImage(popup, item) {
+export default function showModalImage(data, popupImage, closePopup) {
     
-    console.log(item);
-    const cardImage = popup.querySelector('.popup__image');
-    console.log(cardImage)
-    const cardSignature = popup.querySelector('.popup__caption');
-    cardImage.setAttribute('src', item.link);
-    cardImage.setAttribute('alt', item.name);
-    cardSignature.textContent = item.name;
+    const cardSignature = popupImage.querySelector('.popup__caption');
+    const cardClose = popupImage.querySelector('.popup__close');
+    const cardImage = popupImage.querySelector('.popup__image');
+    cardImage.setAttribute('src', data.link);
+    cardImage.setAttribute('alt', data.name);
+    cardSignature.textContent = data.name;
+
+    cardClose.addEventListener('click', () => closePopup(popupImage));
 }
