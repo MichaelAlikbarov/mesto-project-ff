@@ -3,7 +3,7 @@ import { cardTemplate } from "./constants";
 const handleCardLike = (evt) => evt.target.classList.toggle('card__like-button_is-active');
 const removeCard = (evt) => evt.target.closest('.card').remove();
 
-const createCard = (data, handler) => {
+const createCard = (data, clickImageHandler, clickCardLikeHandler, clickDeleteCardHandler) => {
     const cardItem = cardTemplate.cloneNode(true);
     const cardImage = cardItem.querySelector('.card__image');
     const buttonDeleteCard = cardItem.querySelector('.card__delete-button');
@@ -12,14 +12,14 @@ const createCard = (data, handler) => {
     cardImage.setAttribute('src', data.link);
     cardImage.setAttribute('alt', data.name);
 
-    buttonDeleteCard.addEventListener('click', removeCard);
-    buttonLikeCard.addEventListener('click', handleCardLike);
-    cardImage.addEventListener('click', () => handler(data));
+    buttonDeleteCard.addEventListener('click', clickDeleteCardHandler);
+    buttonLikeCard.addEventListener('click', clickCardLikeHandler);
+    cardImage.addEventListener('click', () => clickImageHandler(data));
 
     return cardItem;
 }
 
-export {createCard};
+export {createCard, handleCardLike, removeCard};
 
 
 

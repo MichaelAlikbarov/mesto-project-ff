@@ -17,7 +17,7 @@ import {
 } from './components/constants.js';
 
 import { openPopup, closePopup } from './components/modal.js';
-import { createCard } from './components/card.js';
+import { createCard, handleCardLike, removeCard } from './components/card.js';
 
 const showModalEditProfile = (name, description) => {
     const formEditProfile = document.forms['edit-profile'];
@@ -51,14 +51,14 @@ const handleFormAddCardSubmit = (evt) => {
     evt.preventDefault();
     const inputNameCard = formAddCard.elements['place-name'].value;
     const inputLinkCard = formAddCard.elements.link.value;
-    cardsList.prepend(createCard({name: inputNameCard, link: inputLinkCard}, showModalImage));
+    cardsList.prepend(createCard({name: inputNameCard, link: inputLinkCard}, showModalImage, handleCardLike, removeCard));
     formAddCard.reset();
     closePopup(popupAddCard);
 }
 
 const createCardsList = () => {
     initialCards.forEach((data) => {
-        cardsList.append(createCard(data, showModalImage));
+        cardsList.append(createCard(data, showModalImage, handleCardLike, removeCard));
     })
 };
 
