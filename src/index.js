@@ -45,7 +45,6 @@ const handleFormEditProfileSubmit = (evt) => {
     profileTitle.textContent = inputUserName.value;
     profileDescription.textContent = inputUserDescription.value;
     closePopup(popupEditProfile);
-    console.log('test')
 };
 
 const handleFormAddCardSubmit = (evt) => {
