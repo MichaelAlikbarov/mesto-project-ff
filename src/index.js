@@ -11,9 +11,9 @@ import {
     buttonCloseAddCard,
     profileTitle,
     profileDescription,
-    buttonSaveEditProfile,
-    buttonSaveAddCard,
-    buttonAddCardProfile
+    buttonAddCardProfile,
+    formEditProfile,
+    formAddCard
 } from './components/constants.js';
 
 import { openPopup, closePopup } from './components/modal.js';
@@ -28,28 +28,38 @@ const showModalEditProfile = (name, description) => {
     openPopup(popupEditProfile);
 };
 
+const showModalImage = (data) => {
+    const cardSignature = popupImage.querySelector('.popup__caption');
+    const cardImage = popupImage.querySelector('.popup__image');
+    cardImage.setAttribute('src', data.link);
+    cardImage.setAttribute('alt', data.name);
+    cardSignature.textContent = data.name;
+    openPopup(popupImage);
+};
+
 const handleFormEditProfileSubmit = (evt) => {
     evt.preventDefault();
-    const formEditProfile = document.forms['edit-profile'] 
     const inputUserName = formEditProfile.elements.name;
     const inputUserDescription = formEditProfile.elements.description;
 
     profileTitle.textContent = inputUserName.value;
     profileDescription.textContent = inputUserDescription.value;
+    closePopup(popupEditProfile);
+    console.log('test')
 };
 
 const handleFormAddCardSubmit = (evt) => {
     evt.preventDefault();
-    const formAddCard = document.forms['new-place'];
     const inputNameCard = formAddCard.elements['place-name'].value;
     const inputLinkCard = formAddCard.elements.link.value;
-    cardsList.prepend(createCard({name: inputNameCard, link: inputLinkCard}));
+    cardsList.prepend(createCard({name: inputNameCard, link: inputLinkCard}, showModalImage));
     formAddCard.reset();
+    closePopup(popupAddCard);
 }
 
 const createCardsList = () => {
     initialCards.forEach((data) => {
-        cardsList.append(createCard(data));
+        cardsList.append(createCard(data, showModalImage));
     })
 };
 
@@ -57,10 +67,8 @@ buttonEditProfile.addEventListener('click', () => showModalEditProfile(profileTi
 buttonAddCardProfile.addEventListener('click', () => openPopup(popupAddCard));
 buttonCloseEditProfile.addEventListener('click', () => closePopup(popupEditProfile));
 buttonCloseAddCard.addEventListener('click', () => closePopup(popupAddCard));
-buttonSaveEditProfile.addEventListener('click', handleFormEditProfileSubmit);
-buttonSaveEditProfile.addEventListener('click', () => closePopup(popupEditProfile));
-buttonSaveAddCard.addEventListener('click', handleFormAddCardSubmit);
-buttonSaveAddCard.addEventListener('click', () => closePopup(popupAddCard));
+formEditProfile.addEventListener('submit', handleFormEditProfileSubmit);
+formAddCard.addEventListener('submit', handleFormAddCardSubmit);
 buttonPopupImageClose.addEventListener('click', () => closePopup(popupImage));
 
 createCardsList();
