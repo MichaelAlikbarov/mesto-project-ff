@@ -16,10 +16,25 @@ const buttonCloseAddCard = popupAddCard.querySelector('.popup__close');
 const profileInfo = document.querySelector('.profile__info');
 const profileTitle = profileInfo.querySelector('.profile__title');
 const profileDescription = profileInfo.querySelector('.profile__description');
+const buttonOpenEditAvatar = document.querySelector('.profile__image-hover');
+const popupEditAvatar = document.querySelector('.popup_type_edit-avatar');
+const profileImageAvatar = document.querySelector('.profile__image');
 
 const formEditProfile = document.forms['edit-profile'];
 const formAddCard = document.forms['new-place'];
+const formEditAvatar = document.forms['edit-avatar'];
 
+const validationConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_active'
+  }
+
+const baseURL = 'https://mesto.nomoreparties.co/v1/wff-cohort-16/';
+const tokenAuth = '1e34b2ef-e058-4b59-91e0-0235c0d93704';
 
 export { 
     cardTemplate, 
@@ -35,5 +50,12 @@ export {
     profileTitle,
     profileDescription,
     formEditProfile,
-    formAddCard
+    formAddCard,
+    validationConfig,
+    baseURL,
+    tokenAuth,
+    buttonOpenEditAvatar,
+    popupEditAvatar,
+    formEditAvatar,
+    profileImageAvatar
  };

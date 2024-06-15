@@ -1,0 +1,15 @@
+.profile__image-hover {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    z-index: 1;
+    width: 26px;
+    height: 26px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+}
+
+.profile__image-hover:hover {
+    background-image: url('../../../images/edit-icon2.svg');
+}
