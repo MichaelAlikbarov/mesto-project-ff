@@ -48,7 +48,7 @@
           required 
           minlength="2" 
           maxlength="40"
-          pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$"
+          pattern="[а-яё\w\s\-]+$"
           data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
         >
         <span class="name-input-error popup__input-error"></span>
@@ -61,7 +61,8 @@
           required 
           minlength="2" 
           maxlength="200"
-          pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$"
+          pattern="[A-Za-zА-Яа-яЁё\-\s]+$"
+          data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
         >
         <span class="description-input-error popup__input-error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
@@ -82,14 +83,14 @@
           required 
           minlength="2" 
           maxlength="30"
-          pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$"
+          pattern="[A-Za-zА-Яа-яЁё\-\s]+$"
           data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
         >
         <span class="place-name-input-error popup__input-error"></span>
         <input 
           type="url" 
           name="link" 
-          id="link-input" 
+          id="link-input"
           class="popup__input popup__input_type_url" 
           placeholder="Ссылка на картинку" 
           required
@@ -122,6 +123,14 @@
         <span class="avatar-input-error popup__input-error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
+    </div>
+  </div>
+  <div class="popup popup_type_delete-card">
+    <div class="popup__content">
+      <button class="popup__close"></button>
+      <h3 class="popup__title">Вы уверены?</h3>
+      <form class=""></form>
+      <button type="submit" class="button popup__button">Удалить</button>
     </div>
   </div>
 </div>

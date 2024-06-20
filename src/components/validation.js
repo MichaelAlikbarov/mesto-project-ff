@@ -10,6 +10,7 @@ const hideInputError = (formItem, inputItem) => {
     inputItem?.classList.remove('popup__input_type_error');
     errorItem?.classList.remove('popup__input-error_active');
     errorItem.textContent = '';
+    console.log('test')
 }
 
 const isValid = (formItem, inputItem) => {

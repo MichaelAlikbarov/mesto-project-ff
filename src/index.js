@@ -17,13 +17,22 @@ import {
     buttonOpenEditAvatar,
     popupEditAvatar,
     formEditAvatar,
-    profileImageAvatar
+    profileImageAvatar,
+    buttonCloseEditAvatar
 } from './components/constants.js';
 
 import { openPopup, closePopup } from './components/modal.js';
-import { createCard, handleCardLike, removeCard, showDeleteCardIcon } from './components/card.js';
+import { createCard, handleCardLike, removeCard } from './components/card.js';
 import { clearValidation, enableValidation } from './components/validation.js';
-import { getInfoUser, getInitialCards, postAddCard, handleError, deleteCard, patchInfoUser, patchUserAvatar } from './components/api.js';
+import { getInfoUser, getInitialCards, postAddCard, handleError, patchInfoUser, patchUserAvatar } from './components/api.js';
+
+const renderLoading = (isLoading, button) => {
+    if (isLoading) {
+        button.textContent = 'Сохранение... '
+    } else {
+        button.textContent = 'Сохранить'
+    }
+};
 
 const showModalEditProfile = (name, description) => {
     const formEditProfile = document.forms['edit-profile'];
@@ -48,25 +57,35 @@ const handleFormEditProfileSubmit = (evt) => {
     evt.preventDefault();
     const inputUserName = formEditProfile.elements.name;
     const inputUserDescription = formEditProfile.elements.description;
+    const buttonSaveProfileData = formEditProfile.querySelector('.popup__button');
 
     profileTitle.textContent = inputUserName.value;
     profileDescription.textContent = inputUserDescription.value;
 
     const data = {name: inputUserName.value, about: inputUserDescription.value};
-
+    renderLoading(true, buttonSaveProfileData);
     patchInfoUser(data)
         .then((res) => {
             profileTitle.textContent = res.name;
             profileDescription.textContent = res.about;
         })
-        .catch(handleError);
-  
+        .catch(handleError)
+        .finally(() => {
+            renderLoading(false, buttonSaveProfileData);
+        });
     closePopup(popupEditProfile);
 };
 
 const createCardsList = (dataCards, dataUser) => {
     dataCards.forEach((dataCard) => {
-        cardsList.append(createCard(dataCard, showModalImage, handleCardLike, removeCard, dataUser._id));
+        cardsList.append(createCard(
+            dataCard,
+            showModalImage,
+            handleCardLike,
+            removeCard,
+            dataUser._id,
+            openPopup
+        ));
     })
 };
 
@@ -74,12 +93,16 @@ const handleFormEditAvatarSubmit = (evt) => {
     evt.preventDefault();
     const inputUserAvatar = formEditAvatar.elements.avatar;
     profileImageAvatar.style.backgroundImage = `url(${inputUserAvatar.value})`;
-
+    const buttonSaveAvatar = popupEditAvatar.querySelector('.popup__button');
+    renderLoading(true, buttonSaveAvatar);
     patchUserAvatar({avatar: inputUserAvatar.value})
         .then((res) => {
            profileImageAvatar.style.backgroundImage = res.avatar;
         })
-        .catch(handleError);
+        .catch(handleError)
+        .finally(() => {
+            renderLoading(false, buttonSaveAvatar);
+        });
     formEditAvatar.reset();
     closePopup(popupEditAvatar);
 };
@@ -104,13 +127,24 @@ const handleFormAddCardSubmit = (evt) => {
     const inputNameCard = formAddCard.elements['place-name'].value;
     const inputLinkCard = formAddCard.elements.link.value;
     const data = {name: inputNameCard, link: inputLinkCard};
-
+    const buttonSaveCard = formAddCard.querySelector('.popup__button');
+    renderLoading(true, buttonSaveCard);
     postAddCard(data)
         .then((dataCard) => {
-            cardsList.prepend(createCard(dataCard, showModalImage, handleCardLike, removeCard, userId));
+            cardsList.prepend(createCard(
+                dataCard, 
+                showModalImage,
+                handleCardLike, 
+                removeCard,
+                userId,
+                openPopup
+            ));
         })
-        .catch(handleError);
-    
+        .catch(handleError)
+        .finally(() => {
+            renderLoading(false, buttonSaveCard);
+        })
+
     formAddCard.reset();
     closePopup(popupAddCard);
 };
@@ -127,8 +161,10 @@ formAddCard.addEventListener('submit', handleFormAddCardSubmit);
 formEditAvatar.addEventListener('submit', handleFormEditAvatarSubmit);
 buttonPopupImageClose.addEventListener('click', () => closePopup(popupImage));
 buttonOpenEditAvatar.addEventListener('click', () => {
-    openPopup(popupEditAvatar)
-})
+    openPopup(popupEditAvatar);
+    clearValidation(formEditAvatar, validationConfig);
+});
+buttonCloseEditAvatar.addEventListener('click', () => closePopup(popupEditAvatar));
 
 enableValidation(validationConfig);
 
