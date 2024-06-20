@@ -22,16 +22,12 @@ import {
 } from './components/constants.js';
 
 import { openPopup, closePopup } from './components/modal.js';
-import { createCard, handleCardLike, removeCard } from './components/card.js';
+import { createCard, handleCardLikeToggle, removeCard } from './components/card.js';
 import { clearValidation, enableValidation } from './components/validation.js';
 import { getInfoUser, getInitialCards, postAddCard, handleError, patchInfoUser, patchUserAvatar } from './components/api.js';
 
 const renderLoading = (isLoading, button) => {
-    if (isLoading) {
-        button.textContent = 'Сохранение... '
-    } else {
-        button.textContent = 'Сохранить'
-    }
+    button.textContent = isLoading ? 'Сохранение... ' : 'Сохранить';
 };
 
 const showModalEditProfile = (name, description) => {
@@ -81,7 +77,7 @@ const createCardsList = (dataCards, dataUser) => {
         cardsList.append(createCard(
             dataCard,
             showModalImage,
-            handleCardLike,
+            handleCardLikeToggle,
             removeCard,
             dataUser._id,
             openPopup
@@ -134,7 +130,7 @@ const handleFormAddCardSubmit = (evt) => {
             cardsList.prepend(createCard(
                 dataCard, 
                 showModalImage,
-                handleCardLike, 
+                handleCardLikeToggle, 
                 removeCard,
                 userId,
                 openPopup

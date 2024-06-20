@@ -1,7 +1,34 @@
 import { deleteCard, deleteLike, handleError, putAddLike } from "./api";
 import { cardTemplate } from "./constants";
 
-const handleCardLike = (evt) => evt.target.classList.toggle('card__like-button_is-active');
+const handleCardLikeToggle = (evt) => evt.target.classList.toggle('card__like-button_is-active');
+
+const deleteLikeCard = (dataCard, clickCardLikeHandler, calculateLikes, countLikes, evt) => {
+    deleteLike(dataCard._id)
+        .then((res) => {
+            dataCard.likes = res.likes;
+            clickCardLikeHandler(evt);
+            countLikes.textContent = calculateLikes(res);
+        })
+        .catch(handleError);
+};
+
+const addLikeCard = (dataCard, clickCardLikeHandler, calculateLikes, countLikes, evt) => {
+    putAddLike(dataCard._id)
+        .then((res) => {
+            dataCard.likes = res.likes;
+            clickCardLikeHandler(evt);
+            countLikes.textContent = calculateLikes(res);
+        })
+        .catch(handleError);
+};
+
+const handleCardLikeMethod = (dataCard, userId, clickCardLikeHandler, calculateLikes, countLikes, evt) => {
+    dataCard.likes.some(item => item._id === userId) 
+    ? deleteLikeCard(dataCard, clickCardLikeHandler, calculateLikes, countLikes, evt)
+    : addLikeCard(dataCard, clickCardLikeHandler, calculateLikes, countLikes, evt);
+}
+
 const removeCard = (evt) => {
     evt.target.closest('.card').remove();
 };
@@ -13,12 +40,18 @@ const showDeleteCardIcon = (buttonDeleteCardIcon, userId, ownerId) => {
 
 const calculateLikes = (dataCard) => {
     return  dataCard.likes.length;
-}
+};
 
 const showCardLikeIconActive = (buttonLikeCard, userId, dataCard) => {
-    if (dataCard.likes.find((item) => item._id === userId)) {
+    if (dataCard.likes.some((item) => item._id === userId)) {
         buttonLikeCard.classList.add('card__like-button_is-active');
     }
+};
+
+const handleDeleteCard = (dataCard, evt, clickDeleteCardHandler) => {
+    deleteCard(dataCard._id)
+    .then(() => clickDeleteCardHandler(evt))
+    .catch(handleError);
 }
 
 const createCard = (
@@ -41,43 +74,15 @@ const createCard = (
     showDeleteCardIcon(buttonDeleteCardIcon, userId, dataCard.owner._id);
     showCardLikeIconActive(buttonLikeCard, userId, dataCard);
 
-    buttonDeleteCardIcon.addEventListener('click', (evt) => {
-        deleteCard(dataCard._id)
-            .then(() => clickDeleteCardHandler(evt))
-            .catch(handleError);
-    });
+    buttonDeleteCardIcon.addEventListener('click', (evt) => {handleDeleteCard(dataCard, evt, clickDeleteCardHandler)});
 
-    buttonLikeCard.addEventListener('click', (evt) => {
-        if (dataCard.likes.find(item => item._id === userId)) {
-            deleteLike(dataCard._id)
-                .then((res) => {
-                    dataCard.likes = res.likes;
-                    return res;
-                })
-                .then((res)=> {
-                    clickCardLikeHandler(evt);
-                    countLikes.textContent = calculateLikes(res);
-                })
-                .catch(handleError);
-        } else {
-            putAddLike(dataCard._id)
-                .then((res) => {
-                    dataCard.likes = res.likes;
-                    return res;
-                })
-                .then((res) => {
-                    clickCardLikeHandler(evt);
-                    countLikes.textContent = calculateLikes(res);
-                })
-                .catch(handleError);
-        }
-    });
+    buttonLikeCard.addEventListener('click', (evt) => {handleCardLikeMethod(dataCard, userId, clickCardLikeHandler, calculateLikes, countLikes, evt)});
     cardImage.addEventListener('click', () => clickImageHandler(dataCard));
 
     return cardItem;
 }
 
-export {createCard, handleCardLike, removeCard};
+export {createCard, handleCardLikeToggle, removeCard};
 
 
 
