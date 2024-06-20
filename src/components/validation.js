@@ -1,5 +1,3 @@
-import { validationConfig } from "./constants";
-
 const showInputError = (formItem, inputItem, errorMessage, validationConfig) => {
     const errorItem = formItem.querySelector(`.${inputItem.id}-error`);
     inputItem.classList.add(validationConfig.inputErrorClass);
@@ -14,7 +12,7 @@ const hideInputError = (formItem, inputItem, validationConfig) => {
     errorItem.textContent = '';
 }
 
-const isValid = (formItem, inputItem) => {
+const isValid = (formItem, inputItem, validationConfig) => {
     if (inputItem.validity.patternMismatch) {
         inputItem.setCustomValidity(inputItem.dataset.errorMessage);
     } else {
@@ -34,7 +32,7 @@ const setEventListener = (formItem, validationConfig) => {
     toggleButtonState(inputList, buttonItem, validationConfig)
     inputList.forEach((inputItem) => {
         inputItem.addEventListener('input', () => {
-            isValid(formItem, inputItem);
+            isValid(formItem, inputItem, validationConfig);
             toggleButtonState(inputList, buttonItem, validationConfig);
         })
     })
